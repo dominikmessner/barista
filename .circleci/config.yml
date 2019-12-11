@@ -266,6 +266,10 @@ workflows:
   pr_check:
     jobs:
       - install
+      - hold:
+          type: approval
+          requires:
+            - install
       - check-formatting:
           requires:
             - install
@@ -273,12 +277,12 @@ workflows:
           # SONAR_TOKEN is needed for sonar cloud checks
           context: barista
           requires:
-            - install
+            - hold
       - security-checks:
           # SNYK_TOKEN is needed for security checking
           context: barista
           requires:
-            - install
+            - hold
       - lint:
           requires:
             - install
@@ -289,12 +293,13 @@ workflows:
           # CODECOV_TOKEN is needed to upload unit test results
           context: barista
           requires:
-            - install
+            - hold
       - e2e-test:
           # BROWSERSTACK_ACCESS_KEY is needed for browserstack automation
           # BROWSERSTACK_USERNAME is needed for browserstack automation
           context: barista
           requires:
+            - hold
             - build
       - build:
           requires:
